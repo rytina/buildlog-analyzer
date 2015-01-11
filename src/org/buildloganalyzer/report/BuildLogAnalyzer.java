@@ -6,7 +6,7 @@ public class BuildLogAnalyzer {
 	
 	public BuildLogAnalyzer(File dir){
 		if(!dir.isDirectory()){
-			throw new RuntimeException("no Dir!");
+			throw new RuntimeException("No Dir!");
 		}
 	}
 
