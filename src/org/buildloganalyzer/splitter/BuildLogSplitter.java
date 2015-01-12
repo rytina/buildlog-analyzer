@@ -23,11 +23,13 @@ public class BuildLogSplitter {
 		}
 	}
 
-	public void split(){
-		split(fullLog);
+	public File split(){
+		File splitdir = new File("splitdir");
+		split(fullLog, splitdir);
+		return splitdir;
 	}
 
-	private void split(String fullLog) {
+	private void split(String fullLog, File splitdir) {
 		int lastIndex = 0;
 		while(lastIndex != -1){
 			lastIndex = fullLog.indexOf("T E S T S", lastIndex + 1);
@@ -35,10 +37,10 @@ public class BuildLogSplitter {
 				indizes.add(lastIndex);
 			}
 		}
-		writeSplittedFiles();
+		writeSplittedFiles(splitdir);
 	}
 
-	private void writeSplittedFiles() {
+	private void writeSplittedFiles(File toDir) {
 		for (int i=0; i<indizes.size();i++) {
 			int toIndex;
 			if(i == indizes.size()-1){
@@ -46,12 +48,13 @@ public class BuildLogSplitter {
 			}else{
 				toIndex = indizes.get(i+1);
 			}
-			writeFile(indizes.get(i), toIndex);
+			writeFile(indizes.get(i), toIndex, toDir);
 		}
 	}
 
-	private void writeFile(int fromIndex, int toIndex) {
-		File file = new File(getFileName(fromIndex));
+	private void writeFile(int fromIndex, int toIndex, File toDir) {
+		toDir.mkdir();
+		File file = new File(toDir,getFileName(fromIndex));
 		try {
 			Files.write(fullLog.substring(fromIndex, toIndex), file, Charsets.UTF_8);
 		} catch (IOException e) {
